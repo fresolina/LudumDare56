@@ -24,6 +24,13 @@ jobs:
           restore-keys: |
             Library-
 
+      # Clean up Docker to free up space, to avoid
+      # docker: failed to register layer: write /opt/unity/Editor/Data/Tools/UnityYAMLMerge: no space left on device.
+      - name: Clean up Docker
+        run: |
+          docker system prune -af
+          docker volume prune -f
+
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v4
