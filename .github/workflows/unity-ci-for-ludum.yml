@@ -17,9 +17,9 @@ jobs:
           # if set to "true" but frees about 6 GB
           tool-cache: false
           android: true
-          dotnet: false
           haskell: true
-          large-packages: true
+          dotnet: false
+          large-packages: false
           docker-images: false
           swap-storage: false
 
