@@ -24,13 +24,6 @@ jobs:
           restore-keys: |
             Library-
 
-      # Clean up Docker to free up space, to avoid
-      # docker: failed to register layer: write /opt/unity/Editor/Data/Tools/UnityYAMLMerge: no space left on device.
-      - name: Clean up Docker
-        run: |
-          docker system prune -af
-          docker volume prune -f
-
       # Build
       - name: Build project
         uses: game-ci/unity-builder@v4
@@ -46,6 +39,18 @@ jobs:
         with:
           name: Build
           path: build
+
+      # Clean up Docker to free up space, to avoid
+      # docker: failed to register layer: write /opt/unity/Editor/Data/Tools/UnityYAMLMerge: no space left on device.
+      - name: Clean up Docker
+        run: |
+          docker system prune -af
+          docker volume prune -f
+
+      # Build Docker image for manleydev/butler-publish-itchio-action
+      - name: Build Docker image for itch.io deployment
+        run: |
+          docker build -t manleydev/butler-publish-itchio-action:latest .
 
       # Deploy to Itch
       - uses: manleydev/butler-publish-itchio-action@master
