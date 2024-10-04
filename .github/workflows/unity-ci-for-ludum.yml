@@ -10,19 +10,32 @@ jobs:
       group: unity-build
       cancel-in-progress: true
     steps:
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # this might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          android: true
+          dotnet: false
+          haskell: true
+          large-packages: true
+          docker-images: false
+          swap-storage: false
+
       # Checkout
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
 
-      # # Cache
-      # - uses: actions/cache@v4
-      #   with:
-      #     path: Library
-      #     key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
-      #     restore-keys: |
-      #       Library-
+      # Cache
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-
 
       # Build
       - name: Build project
@@ -39,11 +52,6 @@ jobs:
         with:
           name: Build
           path: build
-
-      # Build Docker image for manleydev/butler-publish-itchio-action
-      - name: Build Docker image for itch.io deployment
-        run: |
-          docker build -t manleydev/butler-publish-itchio-action:latest .
 
       # Deploy to Itch
       - uses: manleydev/butler-publish-itchio-action@master
