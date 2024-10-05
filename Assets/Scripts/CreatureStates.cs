@@ -54,7 +54,7 @@ public class CreatureStates : MonoBehaviour {
 
                 if (stopped) {
                     // Try a random position near the anchor
-                    Vector3 randomDistance = Random.insideUnitCircle * 5.0f;
+                    Vector3 randomDistance = Random.insideUnitCircle * 3.0f;
 
                     // raycast from anchor to random position and only go if we have clear line-of-sight
                     RaycastHit2D hit = Physics2D.Raycast(idleAnchorPosition, randomDistance, randomDistance.magnitude, wallLayerMask);
