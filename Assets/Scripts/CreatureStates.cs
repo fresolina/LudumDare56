@@ -12,10 +12,17 @@ public class CreatureStates : MonoBehaviour {
         // Idle around a fixed position on map
         AnchoredIdle,
         // Walk to a fixed position on map (and then idle)
-        WalkToPosition,
+        WalkToTarget,
     }
 
     NavMeshAgent agent;
+
+    // Fixed position targetting tag for this creature to look for
+    private string targetTag = "Target1";
+
+    private float idleSpeed = 1.0f;
+    private float runSpeed = 5.0f;
+    private float wanderRadius = 3.0f;
 
     private State state = State.FollowPlayer;
 
@@ -30,6 +37,7 @@ public class CreatureStates : MonoBehaviour {
 
     // Raycast collider mask for walls and other fixed obstacles
     private int wallLayerMask = 0;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -56,18 +64,31 @@ public class CreatureStates : MonoBehaviour {
         walkPosition = transform.position;
         idleAnchorPosition = transform.position;
 
-        agent.speed = 1.0f;
+        agent.speed = idleSpeed;
         agent.stoppingDistance = 0.0f;
     }
 
     private void initFollowPlayer() {
         state = State.FollowPlayer;
-        agent.speed = 1.0f;
+        agent.speed = idleSpeed;
         agent.stoppingDistance = 0.0f;
     }
 
+    private void initWalkToTarget() {
+        state = State.WalkToTarget;
+        agent.speed = runSpeed;
+        agent.stoppingDistance = 0.0f;
+        wanderOffset = randomOffset();
+
+        // TODO mustn't be overridden when switching to AnchoredIdle
+        idleAnchorPosition = walkPosition;
+
+        walkPosition = findNearbyPosition(walkPosition, wanderOffset);
+        ;
+    }
+
     private Vector2 randomOffset() {
-        return Random.insideUnitCircle * 3.0f;
+        return Random.insideUnitCircle * wanderRadius;
     }
 
     private Vector2 findNearbyPosition(Vector2 anchor, Vector2 offset) {
@@ -80,9 +101,24 @@ public class CreatureStates : MonoBehaviour {
         }
     }
 
+    // Called from OrderGiver.cs
+    public void SetTarget(OrderGiver.Target target) {
+        if (target.name == targetTag) {
+            walkPosition = target.position;
+            initWalkToTarget();
+        }
+    }
+
+    public void ClearTarget(string targetName) {
+        if (targetName == targetTag) {
+            initFollowPlayer(); // Recalls all creatures marked for this target
+        }
+    }
+
     // Update is called once per frame
     void FixedUpdate() {
         bool stopped = agent.velocity.magnitude == 0.0f;
+        // TODO: better stopped detection. agent.remainingDistance could be useful
 
         switch (state) {
             case State.FollowPlayer:
@@ -97,7 +133,7 @@ public class CreatureStates : MonoBehaviour {
                 IVelocity2 velocity = player.GetComponent<IVelocity2>();
                 if (Vector3.Distance(transform.position, player.position) > 3.0f) {
                     // Falling behind player. Catch up faster.
-                    agent.speed = 5.0f;
+                    agent.speed = runSpeed;
                     if (velocity != null) {
                         float playerSpeed = new Vector2(velocity.VelocityX, velocity.VelocityY).magnitude;
                         agent.speed = Mathf.Max(agent.speed, playerSpeed * 1.25f);
@@ -105,7 +141,7 @@ public class CreatureStates : MonoBehaviour {
                 }
 
                 if (stopped) {
-                    agent.speed = 1.0f; // idle speed
+                    agent.speed = idleSpeed; // idle speed
                     wanderOffset = randomOffset();
                 } else if (Random.value < 0.01f) {
                     // Randomly wander around player (1% chance per frame)
@@ -122,13 +158,16 @@ public class CreatureStates : MonoBehaviour {
                 break;
 
             case State.AnchoredIdle:
-
                 if (stopped) {
                     wanderOffset = randomOffset();
                     walkPosition = findNearbyPosition(idleAnchorPosition, wanderOffset);
                 }
                 break;
-            case State.WalkToPosition:
+
+            case State.WalkToTarget:
+                if (stopped) {
+                    initAnchoredIdle();
+                }
                 break;
         }
     }

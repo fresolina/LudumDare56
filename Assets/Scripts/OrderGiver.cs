@@ -1,0 +1,45 @@
+using UnityEngine;
+
+public class OrderGiver : MonoBehaviour {
+    public class Target {
+        public string name;
+        public Vector2 position;
+    }
+
+    void replaceTarget(string targetName) {
+        Vector2 position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Target target = new Target();
+        target.name = targetName;
+        target.position = position;
+
+        foreach (var creature in GameObject.FindGameObjectsWithTag("Creature")) {
+            creature.BroadcastMessage("SetTarget", target);
+        }
+    }
+
+    void clearTarget(string targetName) {
+        foreach (var creature in GameObject.FindGameObjectsWithTag("Creature")) {
+            creature.BroadcastMessage("ClearTarget", targetName);
+        }
+    }
+
+    void Update() {
+        if (Input.GetMouseButtonDown(0)) {
+            // left click
+            replaceTarget("Target1");
+        } else if (Input.GetMouseButtonDown(1)) {
+            // right click
+            replaceTarget("Target2");
+        } else if (Input.GetMouseButtonDown(2)) {
+            // middle click
+            replaceTarget("Target3");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            clearTarget("Target1");
+            clearTarget("Target2");
+            clearTarget("Target3");
+        }
+    }
+
+}
