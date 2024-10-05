@@ -12,11 +12,11 @@ TagManager:
   - Water
   - UI
   - Blocking Wall
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Enemies
+  - Pickups
+  - Creatures
+  - EnemyProjectiles
+  - PlayerProjectiles
   - 
   - 
   - 

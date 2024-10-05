@@ -28,6 +28,9 @@ public class PlayerCharacter : MonoBehaviour, IVelocity2, ICharacter {
 
     StateMachine _stateMachine;
 
+    private bool _isTakingDamage = false;
+    private float _damageTimer = 0.0f;
+
     void Awake() {
         Sensor = GetComponent<CharacterSensor>();
         _playerInput = GetComponent<PlayerInput>();
@@ -60,5 +63,11 @@ public class PlayerCharacter : MonoBehaviour, IVelocity2, ICharacter {
 
         if (_playerInput.Input.Direction.x != 0)
             _spriteRenderer.flipX = _playerInput.Input.Direction.x < 0;
+
+        //Time.time;
+    }
+
+    void TakeDamage(int iDamage) {
+
     }
 }
