@@ -5,13 +5,18 @@ public class CreatureNavigation : MonoBehaviour {
     [SerializeField] Transform target;
     NavMeshAgent agent;
 
+    CreatureStates states;
+
     private void Start() {
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
+
+        states = GetComponent<CreatureStates>();
     }
 
     private void Update() {
-        agent.SetDestination(target.position);
+        // agent.SetDestination(target.position);
+        agent.SetDestination(states.WalkPosition);
     }
 }
