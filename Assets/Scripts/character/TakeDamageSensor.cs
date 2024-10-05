@@ -36,10 +36,13 @@ public class TakeDamageSensor : MonoBehaviour
             List<Collider2D> results = new List<Collider2D>();
             Collider.Overlap(results);
             if (results.Count > 0) {
-                //results[0].transform.position
-                Vector2 direction = (transform.position - results[0].transform.position).normalized;
-                float pushingForce = 400;
-                _rigidbody.AddForce(direction * pushingForce);
+                var player = GameObject.Find("Player").GetComponent<PlayerCharacter>();
+                if (player.TakeDamage(1)) {
+                    //results[0].transform.position
+                    Vector2 direction = (transform.position - results[0].transform.position).normalized;
+                    float pushingForce = 1000;
+                    _rigidbody.AddForce(direction * pushingForce);
+                }
             }
         }
         /*
