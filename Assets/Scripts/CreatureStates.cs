@@ -1,5 +1,7 @@
+using UnityEditor.MPE;
 using UnityEngine;
 using UnityEngine.AI;
+using character;
 
 public class CreatureStates : MonoBehaviour {
 
@@ -17,14 +19,17 @@ public class CreatureStates : MonoBehaviour {
 
     private State state = State.FollowPlayer;
 
+    private Transform player;
+
     // Fixed position to idle around
-    private Vector3 idleAnchorPosition;
+    private Vector2 idleAnchorPosition;
+    private Vector2 wanderOffset;
 
     // Target position for most navigation states
-    private Vector3 walkPosition;
+    private Vector2 walkPosition;
 
     // Raycast collider mask for walls and other fixed obstacles
-    int wallLayerMask = 0;
+    private int wallLayerMask = 0;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -35,8 +40,8 @@ public class CreatureStates : MonoBehaviour {
 
         wallLayerMask = LayerMask.GetMask("Blocking Wall");
 
-        initAnchoredIdle();
-        // initFollowPlayer();
+        // initAnchoredIdle();
+        initFollowPlayer();
     }
 
     public Vector3 WalkPosition {
@@ -61,28 +66,66 @@ public class CreatureStates : MonoBehaviour {
         agent.stoppingDistance = 0.0f;
     }
 
-    private bool tryFindNearbyPosition(Vector3 anchor, ref Vector3 outPosition) {
-        // Try a random position near the anchor
-        Vector3 randomDistance = Random.insideUnitCircle * 3.0f;
+    private Vector2 randomOffset() {
+        return Random.insideUnitCircle * 3.0f;
+    }
 
+    private Vector2 findNearbyPosition(Vector2 anchor, Vector2 offset) {
         // raycast from anchor to random position and only go if we have clear line-of-sight
-        RaycastHit2D hit = Physics2D.Raycast(anchor, randomDistance, randomDistance.magnitude, wallLayerMask);
+        RaycastHit2D hit = Physics2D.Raycast(anchor, offset, offset.magnitude, wallLayerMask);
         if (!hit) {
-            outPosition = idleAnchorPosition + randomDistance;
-            return true;
+            return anchor + offset;
+        } else {
+            return hit.point - offset.normalized * 0.1f; // move slightly away from the wall
         }
-
-        return false;
     }
 
     // Update is called once per frame
     void FixedUpdate() {
+        bool stopped = agent.velocity.magnitude == 0.0f;
+
         switch (state) {
-            case State.AnchoredIdle:
-                bool stopped = agent.velocity.magnitude < 0.01f;
+            case State.FollowPlayer:
+                if (player == null) {
+                    player = GameObject.FindWithTag("Player")?.transform;
+                    if (player == null) {
+                        initAnchoredIdle();
+                        return;
+                    }
+                }
+
+                IVelocity2 velocity = player.GetComponent<IVelocity2>();
+                if (Vector3.Distance(transform.position, player.position) > 3.0f) {
+                    // Falling behind player. Catch up faster.
+                    agent.speed = 5.0f;
+                    if (velocity != null) {
+                        float playerSpeed = new Vector2(velocity.VelocityX, velocity.VelocityY).magnitude;
+                        agent.speed = Mathf.Max(agent.speed, playerSpeed * 1.25f);
+                    }
+                }
 
                 if (stopped) {
-                    tryFindNearbyPosition(idleAnchorPosition, ref walkPosition);
+                    agent.speed = 1.0f; // idle speed
+                    wanderOffset = randomOffset();
+                } else if (Random.value < 0.01f) {
+                    // Randomly wander around player (1% chance per frame)
+                    wanderOffset = randomOffset();
+                }
+
+                Vector2 offset = wanderOffset;
+                if (velocity != null) {
+                    offset += new Vector2(velocity.VelocityX, velocity.VelocityY);
+                }
+
+                walkPosition = findNearbyPosition(player.position, offset);
+
+                break;
+
+            case State.AnchoredIdle:
+
+                if (stopped) {
+                    wanderOffset = randomOffset();
+                    walkPosition = findNearbyPosition(idleAnchorPosition, wanderOffset);
                 }
                 break;
             case State.WalkToPosition:
