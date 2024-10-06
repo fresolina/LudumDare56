@@ -22,6 +22,8 @@ namespace character.states {
         public override void Init(Animator animator) {
             base.Init(animator);
             _navMeshAgent.enabled = false;
+            _navMeshAgent.updateRotation = false;
+            _navMeshAgent.updateUpAxis = false;
         }
 
         public override void Update() {
