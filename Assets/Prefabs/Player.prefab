@@ -162,6 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CreaturePrefabs:
   - {fileID: 6544661541271269957, guid: c44794c8850c6d01aab09b4c9fbc9690, type: 3}
+  - {fileID: 6544661541271269957, guid: 3d63691c76366e04aba0837348e64248, type: 3}
 --- !u!82 &916853827887052070
 AudioSource:
   m_ObjectHideFlags: 0

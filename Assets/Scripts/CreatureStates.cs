@@ -25,6 +25,8 @@ public class CreatureStates : MonoBehaviour {
     [SerializeField] public AudioClip chargeSound;
 
     private AudioSource audioSource;
+    private Animator _animator;
+    private SpriteRenderer _spriteRenderer;
 
     // Fixed position targetting tag for this creature to look for
     // (Checked against SetTarget() and ClearTarget() callbacks)
@@ -67,6 +69,8 @@ public class CreatureStates : MonoBehaviour {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         audioSource = GetComponent<AudioSource>();
+        _animator = GetComponentInChildren<Animator>();
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         idleAnchorPosition = transform.position;
         walkPosition = transform.position;
@@ -94,12 +98,14 @@ public class CreatureStates : MonoBehaviour {
 
         agent.speed = idleSpeed;
         agent.stoppingDistance = 0.0f;
+        // _animator.Play("idle");
     }
 
     private void initFollowPlayer() {
         state = State.FollowPlayer;
         agent.speed = idleSpeed;
         agent.stoppingDistance = 0.0f;
+        _animator.Play("walking");
     }
 
     private void initWalkToTarget(Vector2 targetPosition) {
@@ -131,7 +137,7 @@ public class CreatureStates : MonoBehaviour {
         agent.enabled = false;
         agent.speed = runSpeed;
         agent.stoppingDistance = attackRange;
-
+        _animator.Play("attacking");
     }
 
     private void restorePreviousState() {
@@ -202,6 +208,12 @@ public class CreatureStates : MonoBehaviour {
         }
 
         return null;
+    }
+
+    void Update() {
+        _animator.SetFloat("Speed", agent.speed);
+        Vector2 direction = agent.destination - transform.position;
+        _spriteRenderer.flipX = direction.x < 0;
     }
 
     // Update is called once per frame
