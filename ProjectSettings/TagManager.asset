@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Target1
+  - Target2
+  - Target3
+  - Creature
   layers:
   - Default
   - TransparentFX
@@ -11,12 +15,12 @@ TagManager:
   - Player
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Blocking Wall
+  - Enemies
+  - Pickups
+  - Creatures
+  - EnemyProjectiles
+  - PlayerProjectiles
   - 
   - 
   - 

@@ -19,6 +19,8 @@ public class PlayerCharacter : MonoBehaviour, IVelocity2, ICharacter {
     public CharacterInput Input => _playerInput.Input;
     public CharacterMoveAbility MoveAbility => _moveAbility;
 
+    [SerializeField] int _health = 5;
+
     // Character components
     [SerializeField] CharacterMoveAbility _moveAbility;
     PlayerInput _playerInput;
@@ -27,6 +29,10 @@ public class PlayerCharacter : MonoBehaviour, IVelocity2, ICharacter {
     SpriteRenderer _spriteRenderer;
 
     StateMachine _stateMachine;
+
+    private bool _isTakingDamage = false;
+    private float _damageTimer = 0.0f;
+    private float _timeToTakeDamage = 0.3f;
 
     void Awake() {
         Sensor = GetComponent<CharacterSensor>();
@@ -55,10 +61,38 @@ public class PlayerCharacter : MonoBehaviour, IVelocity2, ICharacter {
 
     void Update() {
         _stateMachine.Update();
-        Animator.SetBool("IsMoving", _playerInput.Input.Direction.magnitude > 0);
-        Animator.SetFloat("Speed", Mathf.Abs(VelocityX));
+        if (!_isTakingDamage) {
+            Animator.SetBool("IsMoving", _playerInput.Input.Direction.magnitude > 0);
+            Animator.SetFloat("Speed", Mathf.Abs(VelocityX));
 
-        if (_playerInput.Input.Direction.x != 0)
-            _spriteRenderer.flipX = _playerInput.Input.Direction.x < 0;
+            if (_playerInput.Input.Direction.x != 0)
+                _spriteRenderer.flipX = _playerInput.Input.Direction.x < 0;
+
+        } else {
+            _damageTimer += Time.deltaTime;
+            if (_damageTimer >= _timeToTakeDamage) {
+                Color c = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+                _spriteRenderer.color = c;
+                _damageTimer = 0;
+                _isTakingDamage = false;
+            }
+        }
+
+        //Time.time;
+    }
+
+    public bool TakeDamage(int iDamage) {
+        if (_isTakingDamage == false) {
+            _isTakingDamage = true;
+            _health -= iDamage;
+            Color c = new Color(1.0f, 0.0f, 0.0f, 0.8f);
+            _spriteRenderer.color = c;
+            if (_health <= 0) {
+                _health = 0;
+                Destroy(GameObject.Find("Player"));
+            }
+            return true;
+        }
+        return false;
     }
 }
