@@ -3,9 +3,18 @@ using UnityEngine;
 public class OrderGiver : MonoBehaviour {
     private GameObject player;
 
+    private AudioSource audioSource;
+    [SerializeField] AudioClip spawnSound;
+    [SerializeField] AudioClip orderSound;
+
+
     public class Target {
         public string name;
         public Vector2 position;
+    }
+
+    void Start() {
+        audioSource = GetComponent<AudioSource>();
     }
 
     void replaceTarget(string targetName) {
@@ -36,6 +45,8 @@ public class OrderGiver : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             // left click
             replaceTarget("Target1");
+            audioSource.pitch = Random.Range(0.75f, 1.25f);
+            audioSource.PlayOneShot(orderSound);
         } else if (Input.GetMouseButtonDown(1)) {
             // right click
             replaceTarget("Target2");
@@ -53,6 +64,8 @@ public class OrderGiver : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             if (updatePlayer() != null) {
                 player.BroadcastMessage("SpawnCreature", 0, SendMessageOptions.RequireReceiver);
+                audioSource.pitch = Random.Range(1.0f, 2.0f);
+                audioSource.PlayOneShot(spawnSound);
             }
         }
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
