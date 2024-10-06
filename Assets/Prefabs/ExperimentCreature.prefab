@@ -84,6 +84,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attackSound: {fileID: 8300000, guid: cadfb530aca951b5aac915e3d737e763, type: 3}
+  chargeSound: {fileID: 8300000, guid: a1c3a4bfd50ad7c6680b77bca1e8bac5, type: 3}
 --- !u!82 &2845166601810424935
 AudioSource:
   m_ObjectHideFlags: 0
