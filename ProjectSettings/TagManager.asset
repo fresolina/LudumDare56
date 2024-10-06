@@ -10,6 +10,7 @@ TagManager:
   - Creature
   - Map
   - Coin
+  - PlayerSprite
   layers:
   - Default
   - TransparentFX
