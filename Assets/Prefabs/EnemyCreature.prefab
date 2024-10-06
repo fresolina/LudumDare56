@@ -50,7 +50,7 @@ NavMeshAgent:
   m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
-  avoidancePriority: 25
+  avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
@@ -70,8 +70,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 980130fd3bfb20746b5fcb41ec35d6d7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   <PlayerInRangeCollider>k__BackingField: {fileID: 1426547724251366476}
 --- !u!50 &3883295419473685780
 Rigidbody2D:
@@ -110,27 +110,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a347e5e3ec089541a4a33bbf86d2f4c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   _sleepState:
-    _animationName: 
+    _animationName:
   _huntState:
-    _animationName: 
+    _animationName:
     _navMeshAgent: {fileID: 0}
     _target: {fileID: 0}
---- !u!114 &346711576621797399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5103748529874427707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f98e81f709e2253d7af6afc61ecda54a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
 --- !u!1 &5318285761581002982
 GameObject:
   m_ObjectHideFlags: 0
