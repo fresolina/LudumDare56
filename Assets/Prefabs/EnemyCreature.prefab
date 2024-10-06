@@ -115,7 +115,7 @@ MonoBehaviour:
     _animationName: 
   _huntState:
     _animationName: 
-    _navMeshAgent: {fileID: 0}
+    _navMeshAgent: {fileID: 6578852807478322192}
     _target: {fileID: 0}
 --- !u!1 &5318285761581002982
 GameObject:
