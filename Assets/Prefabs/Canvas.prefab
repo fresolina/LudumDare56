@@ -65,8 +65,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '[Mouse 1/2]: order group 1/2  - [Esc]: recall all creatures - [1]: spawn
+  m_text: '[Mouse 1/2]: order group 1/2  - [Tab]: recall all creatures - [1]: spawn
     type 1
+
+    [0] - toggle music layer
 
 '
   m_isRightToLeft: 0
@@ -195,7 +197,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0

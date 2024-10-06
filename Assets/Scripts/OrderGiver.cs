@@ -44,7 +44,7 @@ public class OrderGiver : MonoBehaviour {
             replaceTarget("Target3");
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape)) {
+        if (Input.GetKeyDown(KeyCode.Tab)) {
             clearTarget("Target1");
             clearTarget("Target2");
             clearTarget("Target3");
