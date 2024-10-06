@@ -221,9 +221,7 @@ public class CreatureStates : MonoBehaviour {
         GameObject closestEnemy = ClosestSensedEnemy();
         bool stopped = isNavigationFinished();
 
-        if (attackTimer > 0.0f) {
-            attackTimer -= Time.deltaTime;
-        }
+        attackTimer += Time.deltaTime;
 
         switch (state) {
             case State.FollowPlayer:
@@ -315,19 +313,21 @@ public class CreatureStates : MonoBehaviour {
                     initWalkToEnemy(closestEnemy, false);
                 }
 
-                if (attackTimer <= 0.0f) {
+                if (attackTimer > attackCooldownTime) {
                     // Meele "animation"
-                    attackTimer = attackCooldownTime;
+                    attackTimer = 0.0f;
 
                     attackAnchor = transform.position;
                     attackTarget = transform.position + (closestEnemy.transform.position - transform.position).normalized * attackRange / 2.0f;
 
-                    transform.position = attackTarget;
-
                     audioSource.pitch = Random.Range(0.5f, 1.5f);
                     audioSource.PlayOneShot(attackSound);
-                } else if (attackTimer > attackDuration) {
-                    transform.position = Vector2.Lerp(attackAnchor, attackTarget, (attackTimer - attackDuration) / attackCooldownTime);
+                } else if (attackTimer < attackDuration / 4.0f) {
+                    float subduration = attackDuration / 4.0f;
+                    transform.position = Vector2.Lerp(attackAnchor, attackTarget, attackTimer / subduration);
+                } else if (attackTimer < attackDuration) {
+                    float subduration = 3.0f * attackDuration / 4.0f;
+                    transform.position = Vector2.Lerp(attackTarget, attackAnchor, (attackTimer - attackDuration / 4.0f) / subduration);
                 }
                 // TODO: Graphical Attack animation
                 // TODO: Damage enemy
