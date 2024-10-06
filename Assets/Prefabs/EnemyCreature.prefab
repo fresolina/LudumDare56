@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4643430005893472419}
   - component: {fileID: 3883295419473685780}
   - component: {fileID: 4980986357147699724}
-  - component: {fileID: 346711576621797399}
   m_Layer: 7
   m_Name: EnemyCreature
   m_TagString: Untagged
@@ -70,8 +69,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 980130fd3bfb20746b5fcb41ec35d6d7, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <PlayerInRangeCollider>k__BackingField: {fileID: 1426547724251366476}
 --- !u!50 &3883295419473685780
 Rigidbody2D:
@@ -110,13 +109,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a347e5e3ec089541a4a33bbf86d2f4c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   _sleepState:
-    _animationName:
+    _animationName: 
   _huntState:
-    _animationName:
-    _navMeshAgent: {fileID: 0}
+    _animationName: 
+    _navMeshAgent: {fileID: 6578852807478322192}
     _target: {fileID: 0}
 --- !u!1 &5318285761581002982
 GameObject:
