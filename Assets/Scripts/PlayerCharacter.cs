@@ -33,6 +33,8 @@ public class PlayerCharacter : MonoBehaviour, IVelocity2, ICharacter {
     private bool _isTakingDamage = false;
     private float _damageTimer = 0.0f;
     private float _timeToTakeDamage = 0.3f;
+    float _stoppedMovingAt = 0.0f;
+    bool _isMoving = false;
 
     void Awake() {
         Sensor = GetComponent<CharacterSensor>();
@@ -62,8 +64,21 @@ public class PlayerCharacter : MonoBehaviour, IVelocity2, ICharacter {
     void Update() {
         _stateMachine.Update();
         if (!_isTakingDamage) {
-            Animator.SetBool("IsMoving", _playerInput.Input.Direction.magnitude > 0);
-            Animator.SetFloat("Speed", Mathf.Abs(VelocityX));
+            float speed = _playerInput.Input.Direction.magnitude;
+            Animator.SetFloat("Speed", speed);
+            if (_playerInput.Input.Direction.x != 0)
+                Animator.SetTrigger("MoveSide");
+            else if (_playerInput.Input.Direction.y > 0)
+                Animator.SetTrigger("MoveUp");
+            else if (_playerInput.Input.Direction.y < 0)
+                Animator.SetTrigger("MoveDown");
+
+            Animator.SetFloat("StandingStillSeconds", Time.time - _stoppedMovingAt);
+
+            if (_isMoving) {
+                _stoppedMovingAt = Time.time;
+            }
+            _isMoving = speed != 0f;
 
             if (_playerInput.Input.Direction.x != 0)
                 _spriteRenderer.flipX = _playerInput.Input.Direction.x < 0;
