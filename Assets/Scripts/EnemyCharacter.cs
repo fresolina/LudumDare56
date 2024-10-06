@@ -2,30 +2,31 @@ using character;
 using character.states;
 using statemachine;
 using UnityEngine;
+using UnityEngine.AI;
 
-[RequireComponent(typeof(EnemyCharacterSensor), typeof(Rigidbody2D))]
+[RequireComponent(typeof(EnemyCharacterSensor))]
 public class EnemyCharacter : MonoBehaviour {
     // Character states
     [SerializeField] SleepState _sleepState;
     [SerializeField] HuntPlayerState _huntState;
 
     // IVelocity2
-    public float VelocityX { get => _rigidbody.linearVelocityX; set => _rigidbody.linearVelocityX = value; }
-    public float VelocityY { get => _rigidbody.linearVelocityY; set => _rigidbody.linearVelocityY = value; }
+    public float VelocityX { get => _agent.velocity.x; set => _agent.velocity = new Vector2(value, _agent.velocity.y); }
+    public float VelocityY { get => _agent.velocity.y; set => _agent.velocity = new Vector2(_agent.velocity.x, value); }
 
     public Animator Animator { get; private set; }
 
     // Character components
     // Unity components
-    Rigidbody2D _rigidbody;
     SpriteRenderer _spriteRenderer;
     EnemyCharacterSensor _sensor;
+    NavMeshAgent _agent;
 
     StateMachine _stateMachine;
 
     void Awake() {
         _sensor = GetComponent<EnemyCharacterSensor>();
-        _rigidbody = GetComponent<Rigidbody2D>();
+        _agent = GetComponent<NavMeshAgent>();
         Animator = GetComponentInChildren<Animator>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }

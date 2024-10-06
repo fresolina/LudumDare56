@@ -8778,18 +8778,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 346711576621797399, guid: 85d3f5fe6358ef64599f4b653654de60, type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 120576122}
     - target: {fileID: 4980986357147699724, guid: 85d3f5fe6358ef64599f4b653654de60, type: 3}
       propertyPath: _huntState._target
       value: 
       objectReference: {fileID: 120576122}
-    - target: {fileID: 4980986357147699724, guid: 85d3f5fe6358ef64599f4b653654de60, type: 3}
-      propertyPath: _huntState._creatureNavigation
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 5103748529874427707, guid: 85d3f5fe6358ef64599f4b653654de60, type: 3}
       propertyPath: m_Name
       value: EnemyCreature

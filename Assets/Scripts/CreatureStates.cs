@@ -112,7 +112,7 @@ public class CreatureStates : MonoBehaviour {
     }
 
     private void initWalkToEnemy(GameObject enemy, bool stacks = true) {
-        agent.enabled = true;
+        //agent.enabled = true;
         if (stacks) {
             previousState = state;
 
@@ -128,14 +128,14 @@ public class CreatureStates : MonoBehaviour {
     private void initAttackEnemy(GameObject enemy) {
         state = State.AttackEnemy;
         walkPosition = enemy.transform.position;
-        agent.enabled = false;
+        //agent.enabled = false;
         agent.speed = runSpeed;
         agent.stoppingDistance = attackRange;
 
     }
 
     private void restorePreviousState() {
-        agent.enabled = true;
+        //agent.enabled = true;
         state = previousState;
     }
 
@@ -299,6 +299,7 @@ public class CreatureStates : MonoBehaviour {
                     return;
                 } else if (Vector2.Distance(transform.position, closestEnemy.transform.position) > attackRange) {
                     initWalkToEnemy(closestEnemy, false);
+                    return;
                 }
 
                 if (attackTimer > attackCooldownTime) {
@@ -306,17 +307,20 @@ public class CreatureStates : MonoBehaviour {
                     attackTimer = 0.0f;
 
                     attackAnchor = transform.position;
-                    attackTarget = transform.position + (closestEnemy.transform.position - transform.position).normalized * attackRange / 2.0f;
+                    attackTarget = (transform.position + closestEnemy.transform.position) / 2.0f;
 
                     audioSource.pitch = Random.Range(0.5f, 1.5f);
                     audioSource.PlayOneShot(attackSound);
                 } else if (attackTimer < attackDuration / 4.0f) {
                     float subduration = attackDuration / 4.0f;
                     transform.position = Vector2.Lerp(attackAnchor, attackTarget, attackTimer / subduration);
-                } else if (attackTimer < attackDuration) {
+                } /*
+
+                TODO: didn't work as expected. No time to fix...
+                else if (attackTimer < attackDuration) {
                     float subduration = 3.0f * attackDuration / 4.0f;
-                    transform.position = Vector2.Lerp(attackTarget, attackAnchor, (attackTimer - attackDuration / 4.0f) / subduration);
-                }
+                    transform.position = Vector2.Lerp(attackTarget, attackAnchor, attackTimer / attackDuration);
+                }*/
                 // TODO: Graphical Attack animation
                 // TODO: Damage enemy
 
