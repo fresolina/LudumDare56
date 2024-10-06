@@ -13,7 +13,7 @@ public class PlayerCreatureSpawnController : MonoBehaviour {
 
     public void SpawnCreature(int index) {
         if (index < 0 || index >= CreaturePrefabs.Length) {
-            Debug.LogError("Invalid creature index: " + index);
+            Debug.LogWarning("Invalid creature index: " + index);
             return;
         }
 

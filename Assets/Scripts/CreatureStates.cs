@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using character;
+using System.Collections.Generic;
 
 public class CreatureStates : MonoBehaviour {
 
@@ -11,6 +12,8 @@ public class CreatureStates : MonoBehaviour {
         AnchoredIdle,
         // Walk to a fixed position on map (and then idle)
         WalkToTarget,
+        // Attack an enemy
+        AttackEnemy,
     }
 
     // NavMeshAgent component for pathfinding and some movement magic rules
@@ -22,8 +25,10 @@ public class CreatureStates : MonoBehaviour {
     private float idleSpeed = 1.0f;
     private float runSpeed = 5.0f;
     private float wanderRadius = 3.0f;
+    private float attackDistance = 1.0f;
 
     private State state = State.FollowPlayer;
+    private State previousState = State.FollowPlayer;
 
     // Player reference for FollowPlayer state
     private Transform player;
@@ -42,6 +47,9 @@ public class CreatureStates : MonoBehaviour {
     // Raycast collider mask for walls and other fixed obstacles
     private int wallLayerMask = 0;
 
+    // Raycast collider mask for enemies
+    private int enemyLayerMask = 0;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         idleAnchorPosition = transform.position;
@@ -50,6 +58,7 @@ public class CreatureStates : MonoBehaviour {
         agent = GetComponent<NavMeshAgent>();
 
         wallLayerMask = LayerMask.GetMask("Blocking Wall");
+        enemyLayerMask = LayerMask.GetMask("Enemies");
 
         // initAnchoredIdle(transform.position);
         initFollowPlayer();
@@ -84,6 +93,20 @@ public class CreatureStates : MonoBehaviour {
 
         walkTargetPosition = targetPosition;
         updateWanderTarget(walkTargetPosition);
+    }
+
+    private void initAttackEnemy(GameObject enemy) {
+        previousState = state;
+        state = State.AttackEnemy;
+        walkPosition = enemy.transform.position;
+        agent.speed = runSpeed;
+        agent.stoppingDistance = attackDistance;
+    }
+
+    private void restorePreviousState() {
+        state = previousState;
+        agent.speed = idleSpeed;
+        agent.stoppingDistance = 0.0f;
     }
 
     private Vector2 randomOffset() {
@@ -131,12 +154,38 @@ public class CreatureStates : MonoBehaviour {
         return false;
     }
 
+    private GameObject ClosestSensedEnemy() {
+        List<Collider2D> colliders = new List<Collider2D>();
+        ContactFilter2D filter = new ContactFilter2D();
+        filter.SetLayerMask(enemyLayerMask);
+        Physics2D.OverlapCircle(transform.position, 3.0f, filter, colliders);
+
+        colliders.Sort((a, b) => {
+            float distA = Vector2.Distance(a.transform.position, transform.position);
+            float distB = Vector2.Distance(b.transform.position, transform.position);
+            return distA.CompareTo(distB);
+        });
+
+        foreach (Collider2D enemy in colliders) {
+            if (!Physics2D.Linecast(transform.position, enemy.transform.position, wallLayerMask))
+                return enemy.gameObject;
+        }
+
+        return null;
+    }
+
     // Update is called once per frame
     void FixedUpdate() {
+        GameObject closestEnemy = ClosestSensedEnemy();
         bool stopped = isNavigationFinished();
 
         switch (state) {
             case State.FollowPlayer:
+                if (closestEnemy) {
+                    initAttackEnemy(closestEnemy);
+                    return;
+                }
+
                 // Lost player reference? Start idling where they stood?
                 if (player == null) {
                     player = GameObject.FindWithTag("Player")?.transform;
@@ -174,12 +223,22 @@ public class CreatureStates : MonoBehaviour {
                 break;
 
             case State.AnchoredIdle:
+                if (closestEnemy) {
+                    initAttackEnemy(closestEnemy);
+                    return;
+                }
+
                 if (stopped) {
                     updateWanderTarget(idleAnchorPosition);
                 }
                 break;
 
             case State.WalkToTarget:
+                if (closestEnemy) {
+                    initAttackEnemy(closestEnemy);
+                    return;
+                }
+
                 if (stopped) {
                     initAnchoredIdle(walkTargetPosition);
                 } else if (Random.value < 0.01f) {
@@ -188,6 +247,16 @@ public class CreatureStates : MonoBehaviour {
                 }
 
                 break;
+
+            case State.AttackEnemy: {
+                    if (!closestEnemy) {
+                        restorePreviousState();
+                        return;
+                    }
+                    walkPosition = closestEnemy.transform.position;
+
+                    break;
+                }
         }
     }
 }
