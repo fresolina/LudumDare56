@@ -62,7 +62,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &4533761640538618981
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _groundedState:
     _animationName: monkey-idle
+  _health: 5
   _moveAbility:
     <Config>k__BackingField: {fileID: 11400000, guid: e1e316e767b28c7449a32c1235783e94, type: 2}
 --- !u!114 &3511131733753131603
