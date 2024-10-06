@@ -10,6 +10,9 @@ namespace statemachine {
     }
     public class State : IState {
         public HashSet<ITransition> Transitions { get; private set; }
+#pragma warning disable IDE0052
+        bool _enabled = false;
+#pragma warning restore IDE0052
 
         public State() {
             Init();
@@ -24,9 +27,11 @@ namespace statemachine {
         }
         public virtual void OnEnter() {
             // Debug.Log(GetType().Name + " OnEnter");
+            _enabled = true;
         }
         public virtual void OnExit() {
             // Debug.Log(GetType().Name + " OnExit");
+            _enabled = false;
         }
         public virtual void Update() { }
     }
