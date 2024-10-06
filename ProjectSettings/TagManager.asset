@@ -8,6 +8,7 @@ TagManager:
   - Target2
   - Target3
   - Creature
+  - Map
   layers:
   - Default
   - TransparentFX
