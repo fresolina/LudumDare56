@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 4643430005893472419}
   - component: {fileID: 3883295419473685780}
   - component: {fileID: 4980986357147699724}
-  - component: {fileID: 346711576621797399}
   m_Layer: 0
   m_Name: EnemyCreature
   m_TagString: Untagged
@@ -116,20 +115,8 @@ MonoBehaviour:
     _animationName: 
   _huntState:
     _animationName: 
-    _creatureNavigation: {fileID: 346711576621797399}
---- !u!114 &346711576621797399
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5103748529874427707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f98e81f709e2253d7af6afc61ecda54a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
+    _navMeshAgent: {fileID: 0}
+    _target: {fileID: 0}
 --- !u!1 &5318285761581002982
 GameObject:
   m_ObjectHideFlags: 0
