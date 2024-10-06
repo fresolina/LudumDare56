@@ -115,10 +115,21 @@ public class CreatureStates : MonoBehaviour {
         }
     }
 
+    // This is much more annoying than it shoudl be...
+    private bool isNavigationFinished() {
+        if (!agent.pathPending) {
+            if (agent.remainingDistance <= agent.stoppingDistance) {
+                if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     // Update is called once per frame
     void FixedUpdate() {
-        bool stopped = agent.velocity.magnitude == 0.0f;
-        // TODO: better stopped detection. agent.remainingDistance could be useful
+        bool stopped = isNavigationFinished();
 
         switch (state) {
             case State.FollowPlayer:
