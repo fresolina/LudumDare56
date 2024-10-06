@@ -17,6 +17,8 @@ public class CreatureNavigation : MonoBehaviour {
 
     private void Update() {
         // agent.SetDestination(target.position);
-        agent.SetDestination(states.WalkPosition);
+        if (agent.enabled) {
+            agent.SetDestination(states.WalkPosition);
+        }
     }
 }

@@ -12,12 +12,18 @@ public class CreatureStates : MonoBehaviour {
         AnchoredIdle,
         // Walk to a fixed position on map (and then idle)
         WalkToTarget,
-        // Attack an enemy
+        // Close in to attack an enemy
+        WalkToEnemy,
+        // Attack an enemy in range
         AttackEnemy,
     }
 
     // NavMeshAgent component for pathfinding and some movement magic rules
     NavMeshAgent agent;
+
+    [SerializeField] public AudioClip attackSound;
+
+    private AudioSource audioSource;
 
     // Fixed position targetting tag for this creature to look for
     // (Checked against SetTarget() and ClearTarget() callbacks)
@@ -26,6 +32,7 @@ public class CreatureStates : MonoBehaviour {
     private float runSpeed = 5.0f;
     private float wanderRadius = 3.0f;
     private float attackDistance = 1.0f;
+    private float attackCooldownTime = 1.0f;
 
     private State state = State.FollowPlayer;
     private State previousState = State.FollowPlayer;
@@ -50,8 +57,15 @@ public class CreatureStates : MonoBehaviour {
     // Raycast collider mask for enemies
     private int enemyLayerMask = 0;
 
+    // Used for meelee attack animation
+    private float attackDuration = 0.5f;
+    private float attackTimer = 0.0f;
+    private Vector2 attackAnchor, attackTarget;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
+        audioSource = GetComponent<AudioSource>();
+
         idleAnchorPosition = transform.position;
         walkPosition = transform.position;
 
@@ -95,18 +109,27 @@ public class CreatureStates : MonoBehaviour {
         updateWanderTarget(walkTargetPosition);
     }
 
-    private void initAttackEnemy(GameObject enemy) {
-        previousState = state;
-        state = State.AttackEnemy;
+    private void initWalkToEnemy(GameObject enemy, bool stacks = true) {
+        agent.enabled = true;
+        if (stacks)
+            previousState = state;
+        state = State.WalkToEnemy;
         walkPosition = enemy.transform.position;
         agent.speed = runSpeed;
         agent.stoppingDistance = attackDistance;
     }
 
+    private void initAttackEnemy(GameObject enemy) {
+        state = State.AttackEnemy;
+        walkPosition = enemy.transform.position;
+        agent.enabled = false;
+        agent.speed = runSpeed;
+        agent.stoppingDistance = attackDistance;
+    }
+
     private void restorePreviousState() {
+        agent.enabled = true;
         state = previousState;
-        agent.speed = idleSpeed;
-        agent.stoppingDistance = 0.0f;
     }
 
     private Vector2 randomOffset() {
@@ -144,7 +167,7 @@ public class CreatureStates : MonoBehaviour {
     // This is much more annoying than it shoudl be...
     // https://discussions.unity.com/t/how-can-i-tell-when-a-navmeshagent-has-reached-its-destination/52403/4
     private bool isNavigationFinished() {
-        if (!agent.pathPending) {
+        if (agent.enabled && !agent.pathPending) {
             if (agent.remainingDistance <= agent.stoppingDistance) {
                 if (!agent.hasPath || agent.velocity.sqrMagnitude == 0f) {
                     return true;
@@ -178,6 +201,10 @@ public class CreatureStates : MonoBehaviour {
     void FixedUpdate() {
         GameObject closestEnemy = ClosestSensedEnemy();
         bool stopped = isNavigationFinished();
+
+        if (attackTimer > 0.0f) {
+            attackTimer -= Time.deltaTime;
+        }
 
         switch (state) {
             case State.FollowPlayer:
@@ -224,7 +251,7 @@ public class CreatureStates : MonoBehaviour {
 
             case State.AnchoredIdle:
                 if (closestEnemy) {
-                    initAttackEnemy(closestEnemy);
+                    initWalkToEnemy(closestEnemy);
                     return;
                 }
 
@@ -235,7 +262,7 @@ public class CreatureStates : MonoBehaviour {
 
             case State.WalkToTarget:
                 if (closestEnemy) {
-                    initAttackEnemy(closestEnemy);
+                    initWalkToEnemy(closestEnemy);
                     return;
                 }
 
@@ -248,15 +275,46 @@ public class CreatureStates : MonoBehaviour {
 
                 break;
 
-            case State.AttackEnemy: {
-                    if (!closestEnemy) {
-                        restorePreviousState();
-                        return;
-                    }
-                    walkPosition = closestEnemy.transform.position;
-
-                    break;
+            case State.WalkToEnemy:
+                if (!closestEnemy) {
+                    restorePreviousState();
+                    return;
                 }
+                walkPosition = closestEnemy.transform.position;
+
+                if (Vector2.Distance(transform.position, closestEnemy.transform.position) < attackDistance) {
+                    initAttackEnemy(closestEnemy);
+                }
+
+                break;
+
+            case State.AttackEnemy:
+                if (!closestEnemy) {
+                    restorePreviousState();
+                    return;
+                } else if (Vector2.Distance(transform.position, closestEnemy.transform.position) >= attackDistance) {
+                    initWalkToEnemy(closestEnemy, false);
+                }
+
+                if (attackTimer <= 0.0f) {
+                    // Meele "animation"
+                    Debug.Log("Attack!");
+                    attackTimer = attackCooldownTime;
+
+                    attackAnchor = transform.position;
+                    attackTarget = transform.position + (closestEnemy.transform.position - transform.position).normalized * attackDistance / 2.0f;
+
+                    transform.position = attackTarget;
+
+                    audioSource.pitch = Random.Range(0.5f, 1.5f);
+                    audioSource.PlayOneShot(attackSound);
+                } else if (attackTimer > attackDuration) {
+                    transform.position = Vector2.Lerp(attackAnchor, attackTarget, (attackTimer - attackDuration) / attackCooldownTime);
+                }
+                // TODO: Graphical Attack animation
+                // TODO: Damage enemy
+
+                break;
         }
     }
 }
