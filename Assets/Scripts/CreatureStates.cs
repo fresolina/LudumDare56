@@ -22,6 +22,7 @@ public class CreatureStates : MonoBehaviour {
     NavMeshAgent agent;
 
     [SerializeField] public AudioClip attackSound;
+    [SerializeField] public AudioClip chargeSound;
 
     private AudioSource audioSource;
 
@@ -31,7 +32,8 @@ public class CreatureStates : MonoBehaviour {
     private float idleSpeed = 1.0f;
     private float runSpeed = 5.0f;
     private float wanderRadius = 3.0f;
-    private float attackDistance = 1.0f;
+    private float detectionDistance = 3.0f;
+    private float attackRange = 1.0f;
     private float attackCooldownTime = 1.0f;
 
     private State state = State.FollowPlayer;
@@ -111,12 +113,16 @@ public class CreatureStates : MonoBehaviour {
 
     private void initWalkToEnemy(GameObject enemy, bool stacks = true) {
         agent.enabled = true;
-        if (stacks)
+        if (stacks) {
             previousState = state;
+
+            audioSource.pitch = Random.Range(0.5f, 1.5f);
+            audioSource.PlayOneShot(chargeSound);
+        }
         state = State.WalkToEnemy;
         walkPosition = enemy.transform.position;
         agent.speed = runSpeed;
-        agent.stoppingDistance = attackDistance;
+        agent.stoppingDistance = attackRange;
     }
 
     private void initAttackEnemy(GameObject enemy) {
@@ -124,7 +130,8 @@ public class CreatureStates : MonoBehaviour {
         walkPosition = enemy.transform.position;
         agent.enabled = false;
         agent.speed = runSpeed;
-        agent.stoppingDistance = attackDistance;
+        agent.stoppingDistance = attackRange;
+
     }
 
     private void restorePreviousState() {
@@ -181,7 +188,7 @@ public class CreatureStates : MonoBehaviour {
         List<Collider2D> colliders = new List<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(enemyLayerMask);
-        Physics2D.OverlapCircle(transform.position, 3.0f, filter, colliders);
+        Physics2D.OverlapCircle(transform.position, detectionDistance, filter, colliders);
 
         colliders.Sort((a, b) => {
             float distA = Vector2.Distance(a.transform.position, transform.position);
@@ -209,7 +216,7 @@ public class CreatureStates : MonoBehaviour {
         switch (state) {
             case State.FollowPlayer:
                 if (closestEnemy) {
-                    initAttackEnemy(closestEnemy);
+                    initWalkToEnemy(closestEnemy);
                     return;
                 }
 
@@ -282,7 +289,7 @@ public class CreatureStates : MonoBehaviour {
                 }
                 walkPosition = closestEnemy.transform.position;
 
-                if (Vector2.Distance(transform.position, closestEnemy.transform.position) < attackDistance) {
+                if (Vector2.Distance(transform.position, closestEnemy.transform.position) <= attackRange) {
                     initAttackEnemy(closestEnemy);
                 }
 
@@ -292,17 +299,16 @@ public class CreatureStates : MonoBehaviour {
                 if (!closestEnemy) {
                     restorePreviousState();
                     return;
-                } else if (Vector2.Distance(transform.position, closestEnemy.transform.position) >= attackDistance) {
+                } else if (Vector2.Distance(transform.position, closestEnemy.transform.position) > attackRange) {
                     initWalkToEnemy(closestEnemy, false);
                 }
 
                 if (attackTimer <= 0.0f) {
                     // Meele "animation"
-                    Debug.Log("Attack!");
                     attackTimer = attackCooldownTime;
 
                     attackAnchor = transform.position;
-                    attackTarget = transform.position + (closestEnemy.transform.position - transform.position).normalized * attackDistance / 2.0f;
+                    attackTarget = transform.position + (closestEnemy.transform.position - transform.position).normalized * attackRange / 2.0f;
 
                     transform.position = attackTarget;
 
