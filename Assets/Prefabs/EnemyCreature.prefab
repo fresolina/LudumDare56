@@ -50,7 +50,7 @@ NavMeshAgent:
   m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
-  avoidancePriority: 50
+  avoidancePriority: 25
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
@@ -116,7 +116,8 @@ MonoBehaviour:
     _animationName: 
   _huntState:
     _animationName: 
-    _creatureNavigation: {fileID: 346711576621797399}
+    _navMeshAgent: {fileID: 0}
+    _target: {fileID: 0}
 --- !u!114 &346711576621797399
 MonoBehaviour:
   m_ObjectHideFlags: 0
