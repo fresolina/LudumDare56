@@ -45,6 +45,8 @@ public class OrderGiver : MonoBehaviour {
         if (Input.GetMouseButtonDown(0)) {
             // left click
             replaceTarget("Target1");
+
+            // TODO: less repetition. require some working takers that are in a perceptive state
             audioSource.pitch = Random.Range(0.75f, 1.25f);
             audioSource.PlayOneShot(orderSound);
         } else if (Input.GetMouseButtonDown(1)) {
@@ -64,6 +66,8 @@ public class OrderGiver : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             if (updatePlayer() != null) {
                 player.BroadcastMessage("SpawnCreature", 0, SendMessageOptions.RequireReceiver);
+
+                // TODO: should maybe have a cooldown for less spammy audio
                 audioSource.pitch = Random.Range(1.0f, 2.0f);
                 audioSource.PlayOneShot(spawnSound);
             }
