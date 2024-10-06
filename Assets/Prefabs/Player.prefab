@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3511131733753131603}
   - component: {fileID: 6055848398322094615}
   - component: {fileID: 2777131820476285119}
+  - component: {fileID: 3451528052356936018}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -143,6 +144,20 @@ NavMeshObstacle:
   m_CarveOnlyStationary: 1
   m_Center: {x: 0, y: -0.25, z: 0}
   m_TimeToStationary: 0.5
+--- !u!114 &3451528052356936018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3918707220187835343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95fbacced6c17b919ae8ffdae8e1524f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CreaturePrefabs:
+  - {fileID: 6544661541271269957, guid: c44794c8850c6d01aab09b4c9fbc9690, type: 3}
 --- !u!1 &5888500406249512724
 GameObject:
   m_ObjectHideFlags: 0

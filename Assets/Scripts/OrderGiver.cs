@@ -1,6 +1,8 @@
 using UnityEngine;
 
 public class OrderGiver : MonoBehaviour {
+    private GameObject player;
+
     public class Target {
         public string name;
         public Vector2 position;
@@ -23,6 +25,13 @@ public class OrderGiver : MonoBehaviour {
         }
     }
 
+    private GameObject updatePlayer() {
+        if (player == null) {
+            player = GameObject.FindGameObjectWithTag("Player");
+        }
+        return player;
+    }
+
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
             // left click
@@ -39,6 +48,17 @@ public class OrderGiver : MonoBehaviour {
             clearTarget("Target1");
             clearTarget("Target2");
             clearTarget("Target3");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            if (updatePlayer() != null) {
+                player.BroadcastMessage("SpawnCreature", 0, SendMessageOptions.RequireReceiver);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            if (updatePlayer() != null) {
+                player.BroadcastMessage("SpawnCreature", 1, SendMessageOptions.RequireReceiver);
+            }
         }
     }
 
