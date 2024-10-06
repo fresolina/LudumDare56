@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 17f980babcc0d2a41a0106c594026500
+guid: 7baf362c4ab8b1745a1ca4674b515763
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7675826601332790545
-    second: coin_0
+      213: -8642591119188837437
+    second: small creatures1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: coin_0
+      name: small creatures1_0
       rect:
         serializedVersion: 2
-        x: 8
+        x: 5
         y: 5
-        width: 16
-        height: 23
+        width: 15
+        height: 17
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 1155fe920a3068a60800000000000000
-      internalID: 7675826601332790545
+      spriteID: 3cbbdc1ea295f0880800000000000000
+      internalID: -8642591119188837437
       vertices: []
       indices: 
       edges: []
