@@ -9,7 +9,9 @@ public class MusicController : MonoBehaviour {
 
     private float fade = 0.0f; // 0 = source1, 1 = source2
     private float fadeDirection = 0.0f;
-    private float fadeTime = 1.0f;
+    private float fadeTimeToMain = 5.0f;
+    private float fadeTimeToSecond = 1.0f;
+
     private float maxVolume = 0.5f;
 
 
@@ -51,6 +53,8 @@ public class MusicController : MonoBehaviour {
         if (fadeDirection == 0.0f) {
             return;
         }
+
+        float fadeTime = fadeDirection > 0.0f ? fadeTimeToSecond : fadeTimeToMain;
 
         fade += fadeDirection * Time.deltaTime / fadeTime;
         fade = Mathf.Clamp01(fade);
