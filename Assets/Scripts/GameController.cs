@@ -6,9 +6,13 @@ public class GameController : MonoBehaviour {
 
     private int coinCounter = 0;
 
+    private AudioSource audioSource;
+    [SerializeField] AudioClip coinSound;
+
     void Awake() {
         // Survive across level loads
         DontDestroyOnLoad(this.gameObject);
+        audioSource = GetComponent<AudioSource>();
 
         // For now, reset game on start
         resetGame();
@@ -25,7 +29,9 @@ public class GameController : MonoBehaviour {
     }
 
     public void PickUpCoin() {
-        // TODO: kaching!
+        audioSource.Stop();
+        audioSource.pitch = Random.Range(1.0f, 1.50f);
+        audioSource.PlayOneShot(coinSound);
 
         coinCounter++;
         coinCounterText.text = "" + coinCounter;

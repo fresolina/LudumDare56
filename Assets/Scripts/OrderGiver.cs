@@ -49,7 +49,7 @@ public class OrderGiver : MonoBehaviour {
 
             // TODO: less repetition. require some working takers that are in a perceptive state
             audioSource.Stop();
-            audioSource.pitch = Random.Range(0.75f, 1.25f);
+            audioSource.pitch = Random.Range(1.0f, 1.25f);
             audioSource.PlayOneShot(orderSound);
         } else if (Input.GetMouseButtonDown(1)) {
             // right click
@@ -65,7 +65,7 @@ public class OrderGiver : MonoBehaviour {
             clearTarget("Target3");
 
             audioSource.Stop();
-            audioSource.pitch = Random.Range(0.5f, 1.5f);
+            audioSource.pitch = Random.Range(1.0f, 1.5f);
             audioSource.PlayOneShot(recallSound);
         }
 
