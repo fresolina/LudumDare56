@@ -68,7 +68,13 @@ public class MusicController : MonoBehaviour {
 
     void FixedUpdate() {
         int enemiesHunting = 0;
-        foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        if (enemies.Length == 0) {
+            FadeToSecond();
+            return;
+        }
+
+        foreach (GameObject enemy in enemies) {
             EnemyCharacter enemyCharacter = enemy.GetComponent<EnemyCharacter>();
             if (enemyCharacter == null) {
                 continue;

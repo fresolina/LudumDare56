@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
     private TMP_Text coinCounterText;
+    private TMP_Text enemyCounterText;
+    private TMP_Text winText;
 
     private int coinCounter = 0;
 
@@ -26,6 +28,8 @@ public class GameController : MonoBehaviour {
     private void initScene() {
         coinCounterText = GameObject.Find("CoinCounterText").GetComponent<TMP_Text>();
         coinCounterText.text = "" + coinCounter;
+        enemyCounterText = GameObject.Find("EnemyCounterText").GetComponent<TMP_Text>();
+        winText = GameObject.Find("WinText").GetComponent<TMP_Text>();
     }
 
     public void PickUpCoin() {
@@ -43,6 +47,15 @@ public class GameController : MonoBehaviour {
                 player.BroadcastMessage("SpawnCreature", 1, SendMessageOptions.RequireReceiver);
         }
         coinCounterText.text = "" + coinCounter;
+    }
+
+    void FixedUpdate() {
+        GameObject[] enemiesLeft = GameObject.FindGameObjectsWithTag("Enemy");
+        enemyCounterText.text = "" + enemiesLeft.Length;
+
+        if (enemiesLeft.Length == 0) {
+            winText.enabled = true;
+        }
     }
 
     // TODO: restart. go to title scene, reset game counters, etc.
