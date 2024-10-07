@@ -47,6 +47,10 @@ public class EnemyCharacter : MonoBehaviour {
         _stateMachine.AddTransition(_huntState, _sleepState, () => !_sensor.IsPlayerInRange);
     }
 
+    public bool IsHuntingPlayer() {
+        return _stateMachine.GetState() == _huntState;
+    }
+
     void FixedUpdate() {
         _stateMachine.FixedUpdate();
     }

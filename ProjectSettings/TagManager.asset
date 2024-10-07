@@ -11,6 +11,7 @@ TagManager:
   - Map
   - Coin
   - PlayerSprite
+  - Enemy
   layers:
   - Default
   - TransparentFX

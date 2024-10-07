@@ -3,6 +3,13 @@ using UnityEngine;
 public class PlayerCreatureSpawnController : MonoBehaviour {
     [SerializeField] GameObject[] CreaturePrefabs;
 
+    [SerializeField] AudioClip spawnSound;
+    private AudioSource audioSource;
+
+    void Start() {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     // TODO:
     // -  spawn limits
     // - spawn costs
@@ -19,5 +26,10 @@ public class PlayerCreatureSpawnController : MonoBehaviour {
 
         GameObject creaturePrefab = CreaturePrefabs[index];
         GameObject creature = Instantiate(creaturePrefab, transform.position, Quaternion.identity);
+
+        // TODO: should maybe have a cooldown for less spammy audio
+        audioSource.Stop();
+        audioSource.pitch = Random.Range(1.0f, 2.0f);
+        audioSource.PlayOneShot(spawnSound);
     }
 }
