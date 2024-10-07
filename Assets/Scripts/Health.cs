@@ -7,6 +7,8 @@ public class Health : MonoBehaviour {
     [SerializeField] int _maxHitpoints = 10;
     [SerializeField] float _damageCooldown = 0.5f;
 
+    public event System.Action Died;
+
     int _hitPoints;
     [SerializeField, HideInInspector]
     AudioSource _audioSource;
@@ -31,8 +33,9 @@ public class Health : MonoBehaviour {
                 GameObject go = Instantiate(_deathEffect);
                 go.transform.position = transform.position;
             }
-            gameObject.SetActive(false);
-            Destroy(gameObject, 2);
+            // gameObject.SetActive(false);
+            Destroy(gameObject, 3);
+            Died?.Invoke();
             // Debug.Log($"Died: {name}", gameObject);
         } else {
             if (_damageSounds.Length > 0) {
