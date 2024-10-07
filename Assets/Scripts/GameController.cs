@@ -5,6 +5,7 @@ public class GameController : MonoBehaviour {
     private TMP_Text coinCounterText;
     private TMP_Text enemyCounterText;
     private TMP_Text winText;
+    private TMP_Text loseText;
 
     private int coinCounter = 0;
 
@@ -30,6 +31,7 @@ public class GameController : MonoBehaviour {
         coinCounterText.text = "" + coinCounter;
         enemyCounterText = GameObject.Find("EnemyCounterText").GetComponent<TMP_Text>();
         winText = GameObject.Find("WinText").GetComponent<TMP_Text>();
+        loseText = GameObject.Find("LoseText").GetComponent<TMP_Text>();
     }
 
     public void PickUpCoin() {
@@ -55,6 +57,12 @@ public class GameController : MonoBehaviour {
 
         if (enemiesLeft.Length == 0) {
             winText.enabled = true;
+        }
+
+
+        Health playerHealth = GameObject.FindGameObjectWithTag("Player")?.GetComponent<Health>();
+        if (playerHealth == null || !playerHealth.IsAlive) {
+            loseText.enabled = true;
         }
     }
 
