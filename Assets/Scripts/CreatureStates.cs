@@ -105,6 +105,7 @@ public class CreatureStates : MonoBehaviour {
         agent.speed = idleSpeed;
         agent.stoppingDistance = 0.0f;
         // _animator.Play("idle");
+        _animator.Play("walking");
     }
 
     private void initFollowPlayer() {
@@ -124,6 +125,7 @@ public class CreatureStates : MonoBehaviour {
 
         walkTargetPosition = targetPosition;
         updateWanderTarget(walkTargetPosition);
+        _animator.Play("walking");
     }
 
     private void initWalkToEnemy(GameObject enemy, bool stacks = true) {
@@ -139,6 +141,7 @@ public class CreatureStates : MonoBehaviour {
         walkPosition = enemy.transform.position;
         agent.speed = runSpeed;
         agent.stoppingDistance = attackRange;
+        _animator.Play("walking");
     }
 
     private void initAttackEnemy(GameObject enemy) {
@@ -154,6 +157,7 @@ public class CreatureStates : MonoBehaviour {
     private void restorePreviousState() {
         //agent.enabled = true;
         state = previousState;
+        _animator.Play("walking");
     }
 
     private Vector2 randomOffset() {
@@ -225,8 +229,8 @@ public class CreatureStates : MonoBehaviour {
 
         foreach (Collider2D enemy in colliders) {
             Health enemyHealth = enemy.GetComponent<Health>();
-            if (enemyHealth == null || !enemyHealth.IsAlive)
-                continue;
+            //if (enemyHealth == null || !enemyHealth.IsAlive)
+            //    continue;
 
             if (!Physics2D.Linecast(point, enemy.transform.position, wallLayerMask))
                 return enemy.gameObject;
@@ -280,6 +284,8 @@ public class CreatureStates : MonoBehaviour {
                         agent.speed = Mathf.Max(agent.speed, playerSpeed * 1.25f);
                     }
                     ignoreEnemies = true; // Prioritize catching up
+                } else {
+                    ignoreEnemies = false;
                 }
 
                 if (stopped) {
@@ -316,6 +322,8 @@ public class CreatureStates : MonoBehaviour {
                     initWalkToEnemy(closestEnemy);
                     return;
                 }
+
+                ignoreEnemies = Vector2.Distance(transform.position, walkTargetPosition) > wanderRadius;
 
                 if (stopped) {
                     initAnchoredIdle(walkTargetPosition);
