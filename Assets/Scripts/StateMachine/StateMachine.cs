@@ -37,6 +37,8 @@ namespace statemachine {
 
         public void SetState(IState state) => ChangeState(state);
 
+        public IState GetState() => _current;
+
         void ChangeState(IState nextState) {
             if (nextState == _current) return;
 

@@ -40,7 +40,6 @@ public class MusicController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
         if (Input.GetKeyDown(KeyCode.Alpha0)) {
             if (fade < 0.5f) {
                 FadeToSecond();
@@ -61,5 +60,25 @@ public class MusicController : MonoBehaviour {
             fadeDirection = 0.0f;
         }
 
+    }
+
+    void FixedUpdate() {
+        int enemiesHunting = 0;
+        foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy")) {
+            EnemyCharacter enemyCharacter = enemy.GetComponent<EnemyCharacter>();
+            if (enemyCharacter == null) {
+                continue;
+            }
+
+            if (enemyCharacter.IsHuntingPlayer()) {
+                enemiesHunting++;
+            }
+        }
+
+        if (enemiesHunting > 0) {
+            FadeToSecond();
+        } else {
+            FadeToMain();
+        }
     }
 }
