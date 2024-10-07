@@ -13,7 +13,9 @@ GameObject:
   - component: {fileID: 8905879588198955555}
   - component: {fileID: 1973221263294281042}
   - component: {fileID: 2845166601810424935}
-  m_Layer: 0
+  - component: {fileID: 4372655742121417037}
+  - component: {fileID: 4907475832812773092}
+  m_Layer: 9
   m_Name: MeleeFriendlyCreature
   m_TagString: Creature
   m_Icon: {fileID: 0}
@@ -191,6 +193,41 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4372655742121417037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544661541271269957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356683d8ae57b584a992184c225cc50e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _deathEffect: {fileID: 0}
+  _damageSounds: []
+  _deathSounds: []
+  _maxHitpoints: 2
+  _damageCooldown: 0.5
+  _audioSource: {fileID: 2845166601810424935}
+--- !u!114 &4907475832812773092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6544661541271269957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c214b14188f490145b00c02572c87360, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _damage: 1
+  _damageLayers:
+    serializedVersion: 2
+    m_Bits: 128
+  _attackRange: 0.5
 --- !u!1 &8545172136364699931
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,9 +238,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3291110754678579849}
   - component: {fileID: 1956697144454099577}
-  - component: {fileID: 6604657718384760101}
+  - component: {fileID: 6743216432572272581}
   - component: {fileID: 1521896634278923497}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,14 +317,14 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!70 &6604657718384760101
-CapsuleCollider2D:
+--- !u!58 &6743216432572272581
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8545172136364699931}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -315,8 +352,7 @@ CapsuleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.99999994, y: 1.9999999}
-  m_Direction: 0
+  m_Radius: 0.24
 --- !u!95 &1521896634278923497
 Animator:
   serializedVersion: 7
