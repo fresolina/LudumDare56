@@ -9,6 +9,7 @@ public class EnemyCharacter : MonoBehaviour {
     // Character states
     [SerializeField] SleepState _sleepState;
     [SerializeField] HuntPlayerState _huntState;
+    [SerializeField] DeadState _deadState;
 
     // IVelocity2
     public float VelocityX { get => _agent.velocity.x; set => _agent.velocity = new Vector2(value, _agent.velocity.y); }
@@ -23,17 +24,24 @@ public class EnemyCharacter : MonoBehaviour {
     NavMeshAgent _agent;
 
     StateMachine _stateMachine;
+    bool _isDead = false;
 
     void Awake() {
         _sensor = GetComponent<EnemyCharacterSensor>();
         _agent = GetComponent<NavMeshAgent>();
         Animator = GetComponentInChildren<Animator>();
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        Health health = GetComponent<Health>();
+        health.Died += () => {
+            _isDead = true;
+            _agent.enabled = false;
+        };
     }
 
     void Start() {
         _sleepState.Init(Animator);
         _huntState.Init(Animator);
+        _deadState.Init(Animator);
 
         _stateMachine = new StateMachine();
         _stateMachine.SetState(_sleepState);
@@ -45,6 +53,8 @@ public class EnemyCharacter : MonoBehaviour {
         // Hunt
         // -> Sleep: Player is out of range
         _stateMachine.AddTransition(_huntState, _sleepState, () => !_sensor.IsPlayerInRange);
+
+        _stateMachine.AddAnyTransition(_deadState, () => _isDead);
     }
 
     public bool IsHuntingPlayer() {

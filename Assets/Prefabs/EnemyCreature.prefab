@@ -92,6 +92,8 @@ MonoBehaviour:
     _animationName: wobble
     _navMeshAgent: {fileID: 6578852807478322192}
     _target: {fileID: 0}
+  _deadState:
+    _animationName: explode
 --- !u!82 &6712677482594623952
 AudioSource:
   m_ObjectHideFlags: 0
@@ -223,7 +225,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 3f28da82e4ee7d55881fba1f4e2a3170, type: 3}
   _deathSounds:
   - {fileID: 8300000, guid: a41ebb1803d8133b1b07e7a0dd009769, type: 3}
-  _maxHitpoints: 10
+  _maxHitpoints: 2
   _damageCooldown: 1
   _audioSource: {fileID: 6712677482594623952}
 --- !u!1 &5318285761581002982
