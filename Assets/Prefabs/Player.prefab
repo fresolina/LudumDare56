@@ -132,6 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnSound: {fileID: 8300000, guid: 38e541ae1ca402d1381362fa10a560a6, type: 3}
   orderSound: {fileID: 8300000, guid: 8bfa519a1089dc17495f224c7bb01eda, type: 3}
+  recallSound: {fileID: 8300000, guid: cd91d89ac719d94beac50c762df59d2c, type: 3}
 --- !u!208 &2777131820476285119
 NavMeshObstacle:
   m_ObjectHideFlags: 0

@@ -6,6 +6,7 @@ public class OrderGiver : MonoBehaviour {
     private AudioSource audioSource;
     [SerializeField] AudioClip spawnSound;
     [SerializeField] AudioClip orderSound;
+    [SerializeField] AudioClip recallSound;
 
 
     public class Target {
@@ -47,6 +48,7 @@ public class OrderGiver : MonoBehaviour {
             replaceTarget("Target1");
 
             // TODO: less repetition. require some working takers that are in a perceptive state
+            audioSource.Stop();
             audioSource.pitch = Random.Range(0.75f, 1.25f);
             audioSource.PlayOneShot(orderSound);
         } else if (Input.GetMouseButtonDown(1)) {
@@ -61,6 +63,10 @@ public class OrderGiver : MonoBehaviour {
             clearTarget("Target1");
             clearTarget("Target2");
             clearTarget("Target3");
+
+            audioSource.Stop();
+            audioSource.pitch = Random.Range(0.5f, 1.5f);
+            audioSource.PlayOneShot(recallSound);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
@@ -68,6 +74,7 @@ public class OrderGiver : MonoBehaviour {
                 player.BroadcastMessage("SpawnCreature", 0, SendMessageOptions.RequireReceiver);
 
                 // TODO: should maybe have a cooldown for less spammy audio
+                audioSource.Stop();
                 audioSource.pitch = Random.Range(1.0f, 2.0f);
                 audioSource.PlayOneShot(spawnSound);
             }

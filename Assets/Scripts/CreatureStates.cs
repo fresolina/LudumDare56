@@ -46,6 +46,8 @@ public class CreatureStates : MonoBehaviour {
     // Player reference for FollowPlayer state
     private Transform player;
 
+    private GameObject huntedEnemy;
+
     // Fixed position to walk towards (WalkToTarget)
     private Vector2 walkTargetPosition;
 
@@ -95,6 +97,7 @@ public class CreatureStates : MonoBehaviour {
     // Start idling from the current position
     private void initAnchoredIdle(Vector2 anchorPosition) {
         state = State.AnchoredIdle;
+        huntedEnemy = null;
         ignoreEnemies = false; // Patrol anchor for enemies
         idleAnchorPosition = anchorPosition;
         updateWanderTarget(idleAnchorPosition);
@@ -106,6 +109,7 @@ public class CreatureStates : MonoBehaviour {
 
     private void initFollowPlayer() {
         state = State.FollowPlayer;
+        huntedEnemy = null;
         agent.speed = idleSpeed;
         agent.stoppingDistance = 0.0f;
         ignoreEnemies = true; // First catch up with player. Then protect!
@@ -174,12 +178,21 @@ public class CreatureStates : MonoBehaviour {
     // Called from OrderGiver.cs
     public void SetTarget(OrderGiver.Target target) {
         if (target.name == targetTag) {
-            initWalkToTarget(target.position);
+            GameObject enemy = ClosestSensedEnemy(target.position);
+            if (enemy != null && Vector2.Distance(target.position, enemy.transform.position) < 0.5f) {
+                initWalkToEnemy(enemy, false);
+                huntedEnemy = enemy;
+            } else {
+                huntedEnemy = null;
+                initWalkToTarget(target.position);
+            }
+
         }
     }
 
     public void ClearTarget(string targetName) {
         if (targetName == targetTag) {
+            huntedEnemy = null;
             initFollowPlayer(); // Recalls all creatures marked for this target
         }
     }
@@ -197,11 +210,11 @@ public class CreatureStates : MonoBehaviour {
         return false;
     }
 
-    private GameObject ClosestSensedEnemy() {
+    private GameObject ClosestSensedEnemy(Vector2 point) {
         List<Collider2D> colliders = new List<Collider2D>();
         ContactFilter2D filter = new ContactFilter2D();
         filter.SetLayerMask(enemyLayerMask);
-        Physics2D.OverlapCircle(transform.position, detectionDistance, filter, colliders);
+        Physics2D.OverlapCircle(point, detectionDistance, filter, colliders);
 
         colliders.Sort((a, b) => {
             float distA = Vector2.Distance(a.transform.position, transform.position);
@@ -210,7 +223,7 @@ public class CreatureStates : MonoBehaviour {
         });
 
         foreach (Collider2D enemy in colliders) {
-            if (!Physics2D.Linecast(transform.position, enemy.transform.position, wallLayerMask))
+            if (!Physics2D.Linecast(point, enemy.transform.position, wallLayerMask))
                 return enemy.gameObject;
         }
 
@@ -227,9 +240,15 @@ public class CreatureStates : MonoBehaviour {
     void FixedUpdate() {
         GameObject closestEnemy = null;
         if (!ignoreEnemies) {
-            closestEnemy = ClosestSensedEnemy();
+            if (huntedEnemy) {
+                closestEnemy = huntedEnemy;
+            } else {
+                closestEnemy = ClosestSensedEnemy(transform.position);
+            }
         }
         bool stopped = isNavigationFinished();
+
+        Debug.Log("Hunted enemy: " + huntedEnemy);
 
         attackTimer += Time.deltaTime;
 
