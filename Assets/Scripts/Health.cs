@@ -18,6 +18,8 @@ public class Health : MonoBehaviour {
         _hitPoints = _maxHitpoints;
     }
 
+    public bool IsAlive => _hitPoints > 0;
+
     public void TakeDamage(int damage) {
         if (Time.time - _tookDamageAt < _damageCooldown) {
             return;

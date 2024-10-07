@@ -28,6 +28,7 @@ namespace character.states {
 
         public override void Update() {
             base.Update();
+            if (_target == null) return;
             _navMeshAgent.SetDestination(_target.position);
         }
 

@@ -13,6 +13,10 @@ public class Weapon : MonoBehaviour {
     }
 
     void HandleCollision(Collider2D other) {
+        Health myHealth = GetComponentInParent<Health>();
+        if (myHealth == null || myHealth.IsAlive == false)
+            return;
+
         Health health = other.GetComponentInParent<Health>();
         if (health == null || ((1 << health.gameObject.layer) & _damageLayers) == 0)
             return;

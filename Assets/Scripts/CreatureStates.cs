@@ -180,6 +180,7 @@ public class CreatureStates : MonoBehaviour {
         if (target.name == targetTag) {
             GameObject enemy = ClosestSensedEnemy(target.position);
             if (enemy != null && Vector2.Distance(target.position, enemy.transform.position) < 0.5f) {
+                enemy = enemy.GetComponentInParent<Health>().gameObject; // Quick and dirty find parent
                 initWalkToEnemy(enemy, false);
                 huntedEnemy = enemy;
             } else {
@@ -223,6 +224,10 @@ public class CreatureStates : MonoBehaviour {
         });
 
         foreach (Collider2D enemy in colliders) {
+            Health enemyHealth = enemy.GetComponent<Health>();
+            if (enemyHealth == null || !enemyHealth.IsAlive)
+                continue;
+
             if (!Physics2D.Linecast(point, enemy.transform.position, wallLayerMask))
                 return enemy.gameObject;
         }
