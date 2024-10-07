@@ -164,6 +164,7 @@ MonoBehaviour:
   CreaturePrefabs:
   - {fileID: 6544661541271269957, guid: c44794c8850c6d01aab09b4c9fbc9690, type: 3}
   - {fileID: 6544661541271269957, guid: 3d63691c76366e04aba0837348e64248, type: 3}
+  spawnSound: {fileID: 8300000, guid: 38e541ae1ca402d1381362fa10a560a6, type: 3}
 --- !u!82 &916853827887052070
 AudioSource:
   m_ObjectHideFlags: 0

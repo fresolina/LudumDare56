@@ -248,8 +248,6 @@ public class CreatureStates : MonoBehaviour {
         }
         bool stopped = isNavigationFinished();
 
-        Debug.Log("Hunted enemy: " + huntedEnemy);
-
         attackTimer += Time.deltaTime;
 
         switch (state) {

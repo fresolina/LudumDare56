@@ -34,10 +34,15 @@ public class GameController : MonoBehaviour {
         audioSource.PlayOneShot(coinSound);
 
         coinCounter++;
-        coinCounterText.text = "" + coinCounter;
         if (coinCounter >= 3) {
             // Autobuy a creature
+            coinCounter -= 3;
+
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+                player.BroadcastMessage("SpawnCreature", 1, SendMessageOptions.RequireReceiver);
         }
+        coinCounterText.text = "" + coinCounter;
     }
 
     // TODO: restart. go to title scene, reset game counters, etc.

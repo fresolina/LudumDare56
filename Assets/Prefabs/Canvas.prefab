@@ -32,10 +32,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 728869461766682466}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -209.3, y: -127.55}
-  m_SizeDelta: {x: 20.255, y: 28.092}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 17, y: 4}
+  m_SizeDelta: {x: 20.255005, y: 28.09201}
   m_Pivot: {x: -0.46750256, y: 0.1761821}
 --- !u!222 &277022507555267738
 CanvasRenderer:
@@ -276,10 +276,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '[Mouse 1/2]: order group 1/2  - [Tab]: recall all creatures - [1]: spawn
-    type 1
+  m_text: '[LMB]: order creatures - [RMB]: recall creatures
 
-    [0] - toggle music layer
+    [0] - toggle music
+    layer
 
 '
   m_isRightToLeft: 0
