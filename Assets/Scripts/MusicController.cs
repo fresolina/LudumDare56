@@ -9,7 +9,7 @@ public class MusicController : MonoBehaviour {
 
     private float fade = 0.0f; // 0 = source1, 1 = source2
     private float fadeDirection = 0.0f;
-    private float fadeTimeToMain = 5.0f;
+    private float fadeTimeToMain = 1.0f;
     private float fadeTimeToSecond = 1.0f;
 
     private float maxVolume = 0.5f;
@@ -67,13 +67,20 @@ public class MusicController : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        int enemiesHunting = 0;
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-        if (enemies.Length == 0) {
-            FadeToSecond();
+        // Check for either game over condition
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player == null) {
+            FadeToMain();
             return;
         }
 
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        if (enemies.Length == 0) {
+            FadeToMain();
+            return;
+        }
+
+        int enemiesHunting = 0;
         foreach (GameObject enemy in enemies) {
             EnemyCharacter enemyCharacter = enemy.GetComponent<EnemyCharacter>();
             if (enemyCharacter == null) {
@@ -87,8 +94,9 @@ public class MusicController : MonoBehaviour {
 
         if (enemiesHunting > 0) {
             FadeToSecond();
-        } else {
-            FadeToMain();
         }
+        /* else {
+            FadeToMain();
+        }*/
     }
 }
