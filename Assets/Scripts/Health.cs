@@ -20,6 +20,8 @@ public class Health : MonoBehaviour {
 
     public bool IsAlive => _hitPoints > 0;
 
+    public bool didDeathSound = false;
+
     public void TakeDamage(int damage) {
         if (Time.time - _tookDamageAt < _damageCooldown) {
             return;
@@ -28,8 +30,9 @@ public class Health : MonoBehaviour {
         _tookDamageAt = Time.time;
         _hitPoints -= damage;
         if (_hitPoints <= 0) {
-            if (_deathSounds.Length > 0) {
+            if (_deathSounds.Length > 0 && !didDeathSound) {
                 _audioSource.PlayOneShot(_deathSounds[Random.Range(0, _deathSounds.Length)]);
+                didDeathSound = true;
             }
             if (_deathEffect) {
                 GameObject go = Instantiate(_deathEffect);
